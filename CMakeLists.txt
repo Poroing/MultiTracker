@@ -27,8 +27,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 # Eigen library is required
-find_package (Eigen REQUIRED)
-include_directories (${EIGEN_INCLUDE_DIR})
+find_package (Eigen3 REQUIRED)
+include_directories (${EIGEN3_INCLUDE_DIR})
 
 find_package (BLAS REQUIRED)
 set (DEFAULT_LIBRARIES ${DEFAULT_LIBRARIES} ${BLAS_LIBRARIES})
