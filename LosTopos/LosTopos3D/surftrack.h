@@ -168,6 +168,8 @@ struct SurfTrackInitializationParameters
     /// Whether to be verbose in outputting data
     ///
     bool m_verbose;
+
+    size_t m_maximum_timestep_cuts;
     
 };
 
@@ -497,6 +499,9 @@ public:
     /// Remove deleted vertices and triangles from the mesh data structures
     ///
     void defrag_mesh();
+    void defrag_mesh_from_scratch(std::vector<size_t> & vertices_to_be_mapped);
+    void defrag_mesh_from_scratch_manual(std::vector<size_t> & vertices_to_be_mapped);
+    void defrag_mesh_from_scratch_copy(std::vector<size_t> & vertices_to_be_mapped);
 
     /// Check for labels with -1 as their value, or the same label on both sides.
     /// 
@@ -691,14 +696,27 @@ public:
     class MeshEventCallback
     {
     public:
-        virtual void collapse(const SurfTrack & st, size_t e) { }
-        virtual void split(const SurfTrack & st, size_t e) { }
-        virtual void flip(const SurfTrack & st, size_t e) { }
-        virtual void t1(const SurfTrack & st, size_t v) { }
-        virtual void facesplit(const SurfTrack & st, size_t f) { }
-        virtual void snap(const SurfTrack & st, size_t v0, size_t v1) { }
-        virtual void smoothing(const SurfTrack & st) { }
-        virtual void smooth(const SurfTrack& st, size_t v) { }
+        virtual void pre_collapse(const SurfTrack & st, size_t e, void ** data) { }
+        virtual void post_collapse(const SurfTrack & st, size_t e, size_t merged_vertex, void * data) { }
+
+        virtual void pre_split(const SurfTrack & st, size_t e, void ** data) { }
+        virtual void post_split(const SurfTrack & st, size_t e, size_t new_vertex, void * data) { }
+
+        virtual void pre_flip(const SurfTrack & st, size_t e, void ** data) { }
+        virtual void post_flip(const SurfTrack & st, size_t e, void * data) { }
+
+        virtual void pre_t1(const SurfTrack & st, size_t v, void ** data) { }
+        virtual void post_t1(const SurfTrack & st, size_t v, size_t a, size_t b, void * data) { }
+
+        virtual void pre_facesplit(const SurfTrack & st, size_t f, void ** data) { }
+        virtual void post_facesplit(const SurfTrack & st, size_t f, size_t new_vertex, void * data) { }
+
+        virtual void pre_snap(const SurfTrack & st, size_t v0, size_t v1, void ** data) { }
+        virtual void post_snap(const SurfTrack & st, size_t v_kept, size_t v_deleted, void * data) { }
+
+        virtual void pre_smoothing(const SurfTrack & st, void ** data) { }
+        virtual void post_smoothing(const SurfTrack & st, void * data) { }
+
         virtual std::ostream & log() { return std::cout; }
     };
     

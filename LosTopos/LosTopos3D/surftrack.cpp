@@ -83,7 +83,8 @@ m_allow_non_manifold(true),
 m_perform_improvement(true),
 m_remesh_boundaries(true),
 m_verbose(false),
-m_pull_apart_distance(0.1)
+m_pull_apart_distance(0.1),
+m_maximum_timestep_cuts(std::numeric_limits<size_t>::max())
 {}
 
 
@@ -111,7 +112,8 @@ DynamicSurface( vs,
                initial_parameters.m_friction_coefficient,
                initial_parameters.m_collision_safety,
                initial_parameters.m_collision_safety_asserts,
-               initial_parameters.m_verbose),
+               initial_parameters.m_verbose,
+               initial_parameters.m_maximum_timestep_cuts),
 
 m_collapser( *this, initial_parameters.m_use_curvature_when_collapsing, initial_parameters.m_remesh_boundaries, initial_parameters.m_min_curvature_multiplier ),
 m_splitter( *this, initial_parameters.m_use_curvature_when_splitting, initial_parameters.m_remesh_boundaries, initial_parameters.m_max_curvature_multiplier ),
@@ -397,6 +399,7 @@ void SurfTrack::remove_vertex( size_t vertex_index )
 
 void SurfTrack::defrag_mesh( )
 {
+    assert(!"depcrated; use defrag_mesh_from_scratch() instead.");
     
     //
     // First clear deleted vertices from the data structures
