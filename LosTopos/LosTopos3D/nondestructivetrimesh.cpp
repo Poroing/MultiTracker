@@ -52,6 +52,13 @@ void NonDestructiveTriMesh::clear()
     m_triangle_labels.clear();
 
     clear_connectivity();
+    
+    for (size_t i = 0; i < m_vds.size(); i++)
+        m_vds[i]->resize(0);
+    for (size_t i = 0; i < m_eds.size(); i++)
+        m_eds[i]->resize(0);
+    for (size_t i = 0; i < m_fds.size(); i++)
+        m_fds[i]->resize(0);
 }
 
 
@@ -185,6 +192,11 @@ size_t NonDestructiveTriMesh::nondestructive_add_triangle( const Vec3st& tri, co
     update_is_boundary_vertex( tri[1] );
     update_is_boundary_vertex( tri[2] );
     
+    for (size_t i = 0; i < m_fds.size(); i++)
+        m_fds[i]->resize(nt());
+    for (size_t i = 0; i < m_eds.size(); i++)
+        m_eds[i]->resize(ne());
+    
     return idx;
     
 }
@@ -193,6 +205,8 @@ size_t NonDestructiveTriMesh::nondestructive_add_triangle( const Vec3st& tri, co
 ///
 void NonDestructiveTriMesh::nondestructive_renumber_triangle(size_t tri, const Vec3st& verts) {
 
+    assert(!"depcrated; see SurfTrack::defrag_mesh().");
+    
    assert( verts[0] < m_vertex_to_edge_map.size() );
    assert( verts[1] < m_vertex_to_edge_map.size() );
    assert( verts[2] < m_vertex_to_edge_map.size() );
@@ -332,6 +346,10 @@ size_t NonDestructiveTriMesh::nondestructive_add_vertex( )
     m_vertex_to_triangle_map.resize( m_vertex_to_triangle_map.size() + 1 );
     m_is_boundary_vertex.resize( m_is_boundary_vertex.size() + 1 );
     
+
+    for (size_t i = 0; i < m_vds.size(); i++)
+        m_vds[i]->resize(nv());
+
     return m_vertex_to_triangle_map.size() - 1;
 }
 
